@@ -5,7 +5,7 @@
 / {
     chosen {
         zmk,physical-layout = &physical_layout0;
-        zmk,kscan = &dongle_sideband;
+        zmk,kscan = &dongle_kscan;
         zephyr,display = &oled;
     };
 
@@ -16,46 +16,21 @@
         rows = <6>;
         events = <>;
     };
+};
 
-    encoder_dongle: encoder_dongle {
-        compatible = "alps,ec11";
-        a-gpios = <&pro_micro 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        b-gpios = <&pro_micro 0 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        steps = <80>;
-        status = "okay";
-    };
-
-    encoder_button_kscan: encoder_button_kscan {
-        compatible = "zmk,kscan-gpio-direct";
-        wakeup-source;
-        input-gpios = <&pro_micro 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-    };
-
-    composite_kscan: composite_kscan {
-        compatible = "zmk,kscan-composite";
-        rows = <7>;
-        columns = <16>;
-
-        keyboard {
-            kscan = <&dongle_kscan>;
-        };
-
-        encoder_button {
-            kscan = <&encoder_button_kscan>;
-            row-offset = <6>;
+&pinctrl {
+    i2c0_d0_d1_default: i2c0_d0_d1_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 8)>,
+                <NRF_PSEL(TWIM_SCL, 0, 6)>;
         };
     };
 
-    dongle_sideband: dongle_sideband {
-        compatible = "zmk,kscan-sideband-behaviors";
-        auto-enable;
-        wakeup-source;
-        kscan = <&composite_kscan>;
-
-        encoder_press {
-            row = <6>;
-            column = <0>;
-            bindings = <&kp C_MUTE>;
+    i2c0_d0_d1_sleep: i2c0_d0_d1_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 8)>,
+                <NRF_PSEL(TWIM_SCL, 0, 6)>;
+            low-power-enable;
         };
     };
 };
@@ -70,6 +45,9 @@
 
 &pro_micro_i2c {
     status = "okay";
+    pinctrl-0 = <&i2c0_d0_d1_default>;
+    pinctrl-1 = <&i2c0_d0_d1_sleep>;
+    pinctrl-names = "default", "sleep";
 
     oled: oled@3c {
         compatible = "sinowealth,sh1106";
