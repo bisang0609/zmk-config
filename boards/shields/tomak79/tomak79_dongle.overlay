@@ -1,26 +1,62 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
 #include "tomak79.dtsi"
 
 / {
     chosen {
         zmk,physical-layout = &physical_layout0;
-        zmk,kscan = &dongle_kscan;
+        zmk,kscan = &dongle_sideband;
         zephyr,display = &oled;
     };
 
     dongle_kscan: dongle_kscan {
         compatible = "zmk,kscan-mock";
         status = "okay";
-        columns = <1>;
-        rows = <0>;
+        columns = <16>;
+        rows = <6>;
         events = <>;
     };
 
     encoder_dongle: encoder_dongle {
         compatible = "alps,ec11";
-        a-gpios = <&gpio0 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        b-gpios = <&gpio0 8 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        a-gpios = <&pro_micro 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        b-gpios = <&pro_micro 0 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         steps = <80>;
         status = "okay";
+    };
+
+    encoder_button_kscan: encoder_button_kscan {
+        compatible = "zmk,kscan-gpio-direct";
+        wakeup-source;
+        input-gpios = <&pro_micro 10 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+    };
+
+    composite_kscan: composite_kscan {
+        compatible = "zmk,kscan-composite";
+        rows = <7>;
+        columns = <16>;
+
+        keyboard {
+            kscan = <&dongle_kscan>;
+        };
+
+        encoder_button {
+            kscan = <&encoder_button_kscan>;
+            row-offset = <6>;
+        };
+    };
+
+    dongle_sideband: dongle_sideband {
+        compatible = "zmk,kscan-sideband-behaviors";
+        auto-enable;
+        wakeup-source;
+        kscan = <&composite_kscan>;
+
+        encoder_press {
+            row = <6>;
+            column = <0>;
+            bindings = <&kp C_MUTE>;
+        };
     };
 };
 
