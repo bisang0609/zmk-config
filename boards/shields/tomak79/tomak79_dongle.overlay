@@ -83,5 +83,8 @@
         segment-remap;
         com-invdir;
         prechargep = <0x22>;
+        oscillator-freq = <0x50>;
+        ready-time-ms = <20>;
+        softreset-on;
     };
 };
