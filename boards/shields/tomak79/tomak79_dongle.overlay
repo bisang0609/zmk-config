@@ -65,6 +65,9 @@
         display-offset = <0>;
         multiplex-ratio = <63>;
         prechargep = <0x22>;
+        ready-time-ms = <100>;
+        oscillator-freq = <0x50>;
+        softreset-on;
         segment-remap;
         com-invdir;
         inversion-on;
