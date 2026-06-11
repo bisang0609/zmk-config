@@ -11,3 +11,7 @@ include:
     artifact-name: tomak79_dongle
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y
+  - board: nice_nano_v2
+    shield: tomak79_dongle_i2c_test
+    artifact-name: tomak79_dongle_i2c_test
+    snippet: zmk-usb-logging
