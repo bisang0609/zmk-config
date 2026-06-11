@@ -1,2 +1,6 @@
 
 .zmk/
+.west/
+modules/
+zmk/
+_ref_mctechnology17/
