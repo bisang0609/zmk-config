@@ -58,16 +58,14 @@
     oled: oled@3c {
         compatible = "sinowealth,sh1106";
         reg = <0x3c>;
-        width = <129>;
+        width = <128>;
         height = <64>;
-        segment-offset = <1>;
+        segment-offset = <2>;
         page-offset = <0>;
         display-offset = <0>;
         multiplex-ratio = <63>;
         prechargep = <0x22>;
         ready-time-ms = <100>;
-        oscillator-freq = <0x50>;
-        softreset-on;
         segment-remap;
         com-invdir;
         inversion-on;
