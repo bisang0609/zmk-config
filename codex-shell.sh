@@ -178,6 +178,8 @@ zmk_end() {
   sync_zmk_agents || return
 
   echo
+  echo "Ready to commit/push changes in $zmk_config_root"
+  echo "Press Enter to use the default message: Update tomak79 codex notes"
   read -r -p "Commit message: " msg
 
   commit_and_push_repo "$zmk_config_root" "Update tomak79 codex notes" "$msg"
