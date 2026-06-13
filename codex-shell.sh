@@ -80,11 +80,10 @@ zmk_detect_shell_rc() {
   esac
 }
 
-zmk_install_shell() {
-  local rc_file
+zmk_append_source_line() {
+  local rc_file="$1"
   local source_line
 
-  rc_file="${1:-$(zmk_detect_shell_rc)}"
   source_line="$(zmk_source_line)"
 
   mkdir -p "$(dirname "$rc_file")"
@@ -101,6 +100,32 @@ zmk_install_shell() {
   } >> "$rc_file"
 
   echo "Added Codex shell init to $rc_file"
+}
+
+zmk_install_shell() {
+  local rc_file
+  local shell_name
+
+  if [ -n "$1" ]; then
+    zmk_append_source_line "$1"
+    return
+  fi
+
+  shell_name="$(basename "${SHELL:-bash}")"
+
+  case "$shell_name" in
+    bash)
+      zmk_append_source_line "$HOME/.bashrc" || return
+      zmk_append_source_line "$HOME/.profile" || return
+      ;;
+    zsh)
+      zmk_append_source_line "$HOME/.zshrc" || return
+      ;;
+    *)
+      rc_file="$(zmk_detect_shell_rc)"
+      zmk_append_source_line "$rc_file" || return
+      ;;
+  esac
 }
 
 append_zmk_codex_progress() {
