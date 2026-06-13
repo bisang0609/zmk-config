@@ -100,3 +100,24 @@ OLED를 `D0/D1` 기반 `I2C`로 옮긴 뒤에도 `UART0`가 같은 핀을 점유
 ## 참고
 
 - 비교용 레퍼런스 폴더 `_ref_mctechnology17/` 는 로컬에만 존재하며 Git 추적 대상이 아님
+
+## Codex 셸 연동
+
+이 저장소를 다른 PC에서 그대로 불러와도 같은 `zmk start`, `zmk end`, `zmk status` 흐름을 쓰려면
+쉘 초기화 파일에 아래 한 줄만 추가하면 된다.
+
+```bash
+[ -f "$HOME/keyboard/zmk-config/codex-shell.sh" ] && . "$HOME/keyboard/zmk-config/codex-shell.sh"
+```
+
+필요하면 VS Code 워크스페이스 경로는 아래처럼 지정할 수 있다.
+
+```bash
+export ZMK_WORKSPACE="$HOME/keyboard/tomak79.code-workspace"
+```
+
+## 최근 Codex 운영 변경
+
+- [2026-06-13 20:56:08 KST] `codex-shell.sh`를 추가해 `zmk start/end/status/pull` 로직을 저장소 안으로 이동함
+- [2026-06-13 20:56:08 KST] `zmk end`는 `codex.md`에 진행사항을 기록한 뒤 `bisang0609/zmk-config`만 커밋/푸시하도록 정리함
+- [2026-06-13 20:56:08 KST] 회사 PC에서도 같은 저장소를 pull한 뒤 `.bashrc`에 한 줄만 추가하면 동일한 흐름을 재현할 수 있게 함
