@@ -19,7 +19,8 @@ zmk pull
 
 ## Notes
 
+- `zmk start` and `zmk pull` update both sibling repos, then regenerate `zmk/AGENTS.md` from `zmk-config/codex.md`.
+- `zmk end` appends a note to `zmk-config/codex.md`, regenerates `zmk/AGENTS.md`, and commits only the `zmk-config` repo.
 - The default VS Code workspace is `../tomak79.code-workspace` relative to `zmk-config`.
-- The default VS Code workspace is `tomak79.code-workspace` inside `zmk-config`.
 - Override the workspace path with `ZMK_WORKSPACE=/path/to/workspace.code-workspace`.
 - The workspace file uses relative `git.ignoredRepositories` entries so it works on different machines and clone paths.
