@@ -4,7 +4,8 @@ zmk_config_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 zmk_repo_root_default="$(cd "$zmk_config_root/../zmk" 2>/dev/null && pwd)"
 zmk_repo_root="${ZMK_REPO_ROOT:-$zmk_repo_root_default}"
 zmk_codex_file="$zmk_config_root/codex.md"
-zmk_agents_file="${ZMK_AGENTS_FILE:-$zmk_repo_root/AGENTS.md}"
+zmk_repo_agents_file="${ZMK_AGENTS_FILE:-$zmk_repo_root/AGENTS.md}"
+zmk_config_agents_file="$zmk_config_root/AGENTS.md"
 zmk_workspace_path_default="$(cd "$zmk_config_root/.." && pwd)/tomak79.code-workspace"
 zmk_workspace_path="${ZMK_WORKSPACE:-$zmk_workspace_path_default}"
 
@@ -21,6 +22,7 @@ zmk_require_repo() {
 
 sync_zmk_agents() {
   local tmp_file
+  local target
 
   zmk_require_repo || return 1
 
@@ -40,15 +42,19 @@ sync_zmk_agents() {
     cat "$zmk_codex_file"
   } > "$tmp_file"
 
-  mkdir -p "$(dirname "$zmk_agents_file")"
+  mkdir -p "$(dirname "$zmk_repo_agents_file")"
+  mkdir -p "$(dirname "$zmk_config_agents_file")"
 
-  if [ -f "$zmk_agents_file" ] && cmp -s "$tmp_file" "$zmk_agents_file"; then
-    rm -f "$tmp_file"
-    return 0
-  fi
+  for target in "$zmk_repo_agents_file" "$zmk_config_agents_file"; do
+    if [ -f "$target" ] && cmp -s "$tmp_file" "$target"; then
+      continue
+    fi
 
-  mv "$tmp_file" "$zmk_agents_file"
-  echo "Updated $zmk_agents_file from $zmk_codex_file"
+    cp "$tmp_file" "$target"
+    echo "Updated $target from $zmk_codex_file"
+  done
+
+  rm -f "$tmp_file"
 }
 
 pull_repo() {
