@@ -2,7 +2,53 @@
 
 zmk_repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 zmk_codex_file="$zmk_repo_root/codex.md"
-zmk_workspace_path="${ZMK_WORKSPACE:-$HOME/keyboard/tomak79.code-workspace}"
+zmk_workspace_path_default="$zmk_repo_root/tomak79.code-workspace"
+zmk_workspace_path="${ZMK_WORKSPACE:-$zmk_workspace_path_default}"
+
+zmk_source_line() {
+  printf '[ -f "%s" ] && . "%s"\n' "$zmk_repo_root/codex-shell.sh" "$zmk_repo_root/codex-shell.sh"
+}
+
+zmk_detect_shell_rc() {
+  local shell_name
+
+  shell_name="$(basename "${SHELL:-bash}")"
+
+  case "$shell_name" in
+    bash)
+      echo "$HOME/.bashrc"
+      ;;
+    zsh)
+      echo "$HOME/.zshrc"
+      ;;
+    *)
+      echo "$HOME/.profile"
+      ;;
+  esac
+}
+
+zmk_install_shell() {
+  local rc_file
+  local source_line
+
+  rc_file="${1:-$(zmk_detect_shell_rc)}"
+  source_line="$(zmk_source_line)"
+
+  mkdir -p "$(dirname "$rc_file")"
+  touch "$rc_file"
+
+  if grep -Fqx "$source_line" "$rc_file"; then
+    echo "Shell init already configured in $rc_file"
+    return 0
+  fi
+
+  {
+    echo
+    echo "$source_line"
+  } >> "$rc_file"
+
+  echo "Added Codex shell init to $rc_file"
+}
 
 append_zmk_codex_progress() {
   local progress
@@ -79,12 +125,22 @@ zmk() {
       git pull
       ;;
 
+    shell-init)
+      zmk_source_line
+      ;;
+
+    install-shell)
+      zmk_install_shell "$2"
+      ;;
+
     *)
       echo "Usage:"
       echo "  zmk start   # git pull + open VSCode workspace"
       echo "  zmk end     # append codex note + commit + push"
       echo "  zmk status  # show git status"
       echo "  zmk pull    # git pull only"
+      echo "  zmk shell-init [rc-file]   # print shell init line"
+      echo "  zmk install-shell [rc-file] # append shell init line"
       ;;
   esac
 }
@@ -94,3 +150,7 @@ end() {
 }
 
 alias start='zmk start'
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  zmk "$@"
+fi

@@ -104,16 +104,28 @@ OLED를 `D0/D1` 기반 `I2C`로 옮긴 뒤에도 `UART0`가 같은 핀을 점유
 ## Codex 셸 연동
 
 이 저장소를 다른 PC에서 그대로 불러와도 같은 `zmk start`, `zmk end`, `zmk status` 흐름을 쓰려면
-쉘 초기화 파일에 아래 한 줄만 추가하면 된다.
+저장소 경로 기준으로 셸 초기화에 `codex-shell.sh`만 등록하면 된다.
 
 ```bash
-[ -f "$HOME/keyboard/zmk-config/codex-shell.sh" ] && . "$HOME/keyboard/zmk-config/codex-shell.sh"
+bash /path/to/zmk-config/codex-shell.sh install-shell
 ```
 
-필요하면 VS Code 워크스페이스 경로는 아래처럼 지정할 수 있다.
+위 명령은 현재 로그인 셸에 맞는 기본 RC 파일(`.bashrc`, `.zshrc`, `.profile`)에
+현재 저장소 절대경로를 자동으로 추가한다.
+
+수동으로 넣고 싶으면 아래 명령으로 한 줄을 출력해 복사하면 된다.
 
 ```bash
-export ZMK_WORKSPACE="$HOME/keyboard/tomak79.code-workspace"
+bash /path/to/zmk-config/codex-shell.sh shell-init
+```
+
+VS Code 워크스페이스 기본 경로는 `zmk-config` 저장소 안의
+`tomak79.code-workspace`를 자동 사용한다.
+
+필요하면 워크스페이스 경로는 아래처럼 덮어쓸 수 있다.
+
+```bash
+export ZMK_WORKSPACE="/path/to/tomak79.code-workspace"
 ```
 
 ## 최근 Codex 운영 변경
@@ -121,3 +133,4 @@ export ZMK_WORKSPACE="$HOME/keyboard/tomak79.code-workspace"
 - [2026-06-13 20:56:08 KST] `codex-shell.sh`를 추가해 `zmk start/end/status/pull` 로직을 저장소 안으로 이동함
 - [2026-06-13 20:56:08 KST] `zmk end`는 `codex.md`에 진행사항을 기록한 뒤 `bisang0609/zmk-config`만 커밋/푸시하도록 정리함
 - [2026-06-13 20:56:08 KST] 회사 PC에서도 같은 저장소를 pull한 뒤 `.bashrc`에 한 줄만 추가하면 동일한 흐름을 재현할 수 있게 함
+- [2026-06-13 21:24:51 KST] `codex-shell.sh install-shell`과 저장소 포함 워크스페이스 설정을 추가해 집/회사 경로 차이에도 그대로 동작하도록 정리함
