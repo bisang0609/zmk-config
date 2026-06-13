@@ -115,3 +115,5 @@ export ZMK_WORKSPACE="/path/to/tomak79.code-workspace"
 - [2026-06-13 21:24:51 KST] `codex-shell.sh install-shell`과 저장소 포함 워크스페이스 설정을 추가해 집/회사 경로 차이에도 그대로 동작하도록 정리함
 
 - [2026-06-13 23:29:45 KST] No progress note provided.
+
+- [2026-06-13 23:31:37 KST] No progress note provided.
