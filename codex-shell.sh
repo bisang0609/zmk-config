@@ -55,12 +55,6 @@ zmk_end() {
 zmk() {
   case "$1" in
     start)
-      if [ -f "$zmk_codex_file" ]; then
-        echo "== $zmk_codex_file =="
-        cat "$zmk_codex_file"
-        echo
-      fi
-
       cd "$zmk_repo_root" || return
       git pull
 
@@ -87,7 +81,7 @@ zmk() {
 
     *)
       echo "Usage:"
-      echo "  zmk start   # show codex.md + git pull + open VSCode workspace"
+      echo "  zmk start   # git pull + open VSCode workspace"
       echo "  zmk end     # append codex note + commit + push"
       echo "  zmk status  # show git status"
       echo "  zmk pull    # git pull only"
